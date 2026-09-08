@@ -1,11 +1,11 @@
--- New example script written by wally
+-- New example script written by pasta.wtf
 -- You can suggest changes with a pull request or something
 
 local repo = 'https://raw.githubusercontent.com/PastaHubRep/Ui/main/'
 
 local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
-local ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
-local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
+local SaveManager = loadstring(game:HttpGet('https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/refs/heads/main/addons/SaveManager.lua'))()
+local ThemeManager = loadstring(game:HttpGet('https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/refs/heads/main/addons/ThemeManager.lua'))()
 
 local Window = Library:CreateWindow({
     -- Set Center to true if you want the menu to appear in the center
@@ -31,6 +31,80 @@ local Tabs = {
     Main = Window:AddTab('Main'),
     ['UI Settings'] = Window:AddTab('UI Settings'),
 }
+
+-- Add Game Name Label at the TOP RIGHT of the UI WINDOW
+task.spawn(function()
+    task.wait(0.3) -- Wait longer for UI to fully render
+    
+    -- Find the window by looking for the frame with "Title" child
+    local windowFrame = nil
+    for _, child in pairs(Library.ScreenGui:GetChildren()) do
+        if child:IsA("Frame") then
+            -- Check for the title bar
+            for _, grandchild in pairs(child:GetChildren()) do
+                if grandchild:IsA("TextLabel") and grandchild.Text == "Example menu" then
+                    windowFrame = child
+                    break
+                end
+            end
+            if windowFrame then break end
+        end
+    end
+    
+    if windowFrame then
+        -- Create the label
+        local GameNameLabel = Instance.new("TextLabel")
+        GameNameLabel.Name = "GameNameLabel"
+        GameNameLabel.Text = "RIVALS"
+        GameNameLabel.TextSize = 18
+        GameNameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        GameNameLabel.Font = Enum.Font.Code
+        GameNameLabel.Size = UDim2.new(0, 150, 0, 25)
+        GameNameLabel.Position = UDim2.new(1, -155, 0, 7)
+        GameNameLabel.BackgroundTransparency = 1
+        GameNameLabel.TextXAlignment = Enum.TextXAlignment.Right
+        GameNameLabel.TextYAlignment = Enum.TextYAlignment.Center
+        GameNameLabel.ZIndex = 100
+        GameNameLabel.Parent = windowFrame
+        
+        -- Add text stroke
+        local stroke = Instance.new("UIStroke")
+        stroke.Color = Color3.new(0, 0, 0)
+        stroke.Thickness = 1
+        stroke.LineJoinMode = Enum.LineJoinMode.Miter
+        stroke.Parent = GameNameLabel
+    else
+        -- Try fallback - find any large frame
+        for _, child in pairs(Library.ScreenGui:GetChildren()) do
+            if child:IsA("Frame") and child.Size.X.Offset > 300 and child.Size.Y.Offset > 200 then
+                windowFrame = child
+                break
+            end
+        end
+        
+        if windowFrame then
+            local GameNameLabel = Instance.new("TextLabel")
+            GameNameLabel.Name = "GameNameLabel"
+            GameNameLabel.Text = "RIVALS"
+            GameNameLabel.TextSize = 18
+            GameNameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            GameNameLabel.Font = Enum.Font.Code
+            GameNameLabel.Size = UDim2.new(0, 150, 0, 25)
+            GameNameLabel.Position = UDim2.new(1, -155, 0, 3)
+            GameNameLabel.BackgroundTransparency = 1
+            GameNameLabel.TextXAlignment = Enum.TextXAlignment.Right
+            GameNameLabel.TextYAlignment = Enum.TextYAlignment.Center
+            GameNameLabel.ZIndex = 100
+            GameNameLabel.Parent = windowFrame
+            
+            local stroke = Instance.new("UIStroke")
+            stroke.Color = Color3.new(0, 0, 0)
+            stroke.Thickness = 1
+            stroke.LineJoinMode = Enum.LineJoinMode.Miter
+            stroke.Parent = GameNameLabel
+        end
+    end
+end)
 
 -- Groupbox and Tabbox inherit the same functions
 -- except Tabboxes you have to call the functions on a tab (Tabbox:AddTab(name))
@@ -61,7 +135,6 @@ LeftGroupBox:AddToggle('MyToggle', {
         print('[cb] MyToggle changed to:', Value)
     end
 })
-
 
 -- Fetching a toggle object for later use:
 -- Toggles.MyToggle.Value
@@ -300,7 +373,6 @@ LeftGroupBox:AddLabel('Keybind'):AddKeyPicker('KeyPicker', {
     Default = 'MB2', -- String as the name of the keybind (MB1, MB2 for mouse buttons)
     SyncToggleState = false,
 
-
     -- You can define custom Modes but I have never had a use for it.
     Mode = 'Toggle', -- Modes: Always, Toggle, Hold
 
@@ -398,7 +470,7 @@ local WatermarkConnection = game:GetService('RunService').RenderStepped:Connect(
         FrameCounter = 0;
     end;
 
-    Library:SetWatermark(('LinoriaLib demo | %s fps | %s ms'):format(
+    Library:SetWatermark(('Pasta.wtf | %s fps | %s ms'):format(
         math.floor(FPS),
         math.floor(game:GetService('Stats').Network.ServerStatsItem['Data Ping']:GetValue())
     ));
@@ -441,8 +513,8 @@ SaveManager:SetIgnoreIndexes({ 'MenuKeybind' })
 -- use case for doing it this way:
 -- a script hub could have themes in a global folder
 -- and game configs in a separate folder per game
-ThemeManager:SetFolder('MyScriptHub')
-SaveManager:SetFolder('MyScriptHub/specific-game')
+ThemeManager:SetFolder('Pasta.Wtf')
+SaveManager:SetFolder('Pasta.Wtf/specific-game')
 
 -- Builds our config menu on the right side of our tab
 SaveManager:BuildConfigSection(Tabs['UI Settings'])
