@@ -55,12 +55,26 @@ table.insert(Library.Signals, RenderStepped:Connect(function(Delta)
     if RainbowStep >= (1 / 60) then
         RainbowStep = 0
 
-        Hue = Hue + (1 / 400);
+        -- Rainbow speed
+        Hue = Hue + (1 / 400)
 
         if Hue > 1 then
-            Hue = 0;
-        end;
+            Hue = 0
+        end
 
+        Library.CurrentRainbowHue = Hue
+        Library.CurrentRainbowColor = Color3.fromHSV(Hue, 0.8, 1)
+
+        -- Update every registered outline
+        for _, Object in next, Library.Registry do
+            for Property, ColorIdx in next, Object.Properties do
+                if ColorIdx == 'OutlineColor' then
+                    Object.Instance[Property] = Library.CurrentRainbowColor
+                end
+            end
+        end
+    end
+end))
         Library.CurrentRainbowHue = Hue;
         Library.CurrentRainbowColor = Color3.fromHSV(Hue, 0.8, 1);
     end
