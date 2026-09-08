@@ -56,18 +56,27 @@ table.insert(Library.Signals, RenderStepped:Connect(function(Delta)
     if RainbowStep >= (1 / 60) then
         RainbowStep = 0
 
-        Hue = Hue + (1 / 400);
+        -- Smooth rainbow cycle
+        Hue = Hue + (1 / 300)
 
-        if Hue > 1 then
-            Hue = 0;
-        end;
+        if Hue >= 1 then
+            Hue = 0
+        end
 
-        Library.CurrentRainbowHue = Hue;
-        Library.CurrentRainbowColor = Color3.fromHSV(Hue, 1, 1);
-        Library.RainbowOutlineColor = Library.CurrentRainbowColor;
+        local RainbowColor = Color3.fromHSV(Hue, 1, 1)
 
-        -- Refresh every registered UI border that uses RainbowOutlineColor.
-        Library:UpdateColorsUsingRegistry();
+        Library.CurrentRainbowHue = Hue
+        Library.CurrentRainbowColor = RainbowColor
+
+        -- Update the main accent color so every UI element that uses
+        -- AccentColor (including sliders, toggles, tabs, buttons, etc.)
+        -- follows the rainbow.
+        Library.AccentColor = RainbowColor
+        Library.AccentColorDark = Library:GetDarkerColor(RainbowColor)
+        Library.RainbowOutlineColor = RainbowColor
+
+        -- Refresh all registered UI colors.
+        Library:UpdateColorsUsingRegistry()
     end
 end))
 
@@ -2027,7 +2036,7 @@ do
 
         Library:AddToRegistry(Fill, {
             BackgroundColor3 = 'AccentColor';
-            BorderColor3 = 'AccentColorDark';
+            BorderColor3 = 'RainbowOutlineColor';
         });
 
         local HideBorderRight = Library:Create('Frame', {
