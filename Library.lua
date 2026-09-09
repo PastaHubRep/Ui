@@ -2711,7 +2711,8 @@ do
 
     local WatermarkOuter = Library:Create('Frame', {
         BorderColor3 = Color3.new(0, 0, 0);
-        Position = UDim2.new(0, 100, 0, -25);
+        AnchorPoint = Vector2.new(0.5, 0);
+        Position = UDim2.new(0.5, 0, 0, 5);
         Size = UDim2.new(0, 213, 0, 20);
         ZIndex = 200;
         Visible = false;
@@ -2769,8 +2770,6 @@ do
 
     Library.Watermark = WatermarkOuter;
     Library.WatermarkText = WatermarkLabel;
-    Library:MakeDraggable(Library.Watermark);
-
 
 
     local KeybindOuter = Library:Create('Frame', {
@@ -2850,6 +2849,8 @@ end;
 function Library:SetWatermark(Text)
     local X, Y = Library:GetTextBounds(Text, Library.Font, 14);
     Library.Watermark.Size = UDim2.new(0, X + 15, 0, (Y * 1.5) + 3);
+    Library.Watermark.AnchorPoint = Vector2.new(0.5, 0);
+    Library.Watermark.Position = UDim2.new(0.5, 0, 0, 5);
     Library:SetWatermarkVisibility(true)
 
     Library.WatermarkText.Text = Text;
