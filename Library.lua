@@ -32,9 +32,11 @@ local Library = {
     FontColor = Color3.fromRGB(255, 255, 255);
     MainColor = Color3.fromRGB(28, 28, 28);
     BackgroundColor = Color3.fromRGB(20, 20, 20);
-    AccentColor = Color3.fromRGB(0, 85, 255);
+    -- Pastel pink theme
+    AccentColor = Color3.fromRGB(255, 170, 205);
+    AccentColorDark = Color3.fromRGB(170, 95, 130);
     OutlineColor = Color3.fromRGB(50, 50, 50);
-    RainbowOutlineColor = Color3.fromRGB(0, 85, 255);
+    RainbowOutlineColor = Color3.fromRGB(255, 170, 205);
     RiskColor = Color3.fromRGB(255, 50, 50),
 
     Black = Color3.new(0, 0, 0);
@@ -47,38 +49,15 @@ local Library = {
     ScreenGui = ScreenGui;
 };
 
-local RainbowStep = 0
-local Hue = 0
+-- Rainbow theme disabled: keep the UI consistently pastel pink.
+local PastelPink = Color3.fromRGB(255, 170, 205);
+local PastelPinkDark = Color3.fromRGB(170, 95, 130);
 
-table.insert(Library.Signals, RenderStepped:Connect(function(Delta)
-    RainbowStep = RainbowStep + Delta
-
-    if RainbowStep >= (1 / 60) then
-        RainbowStep = 0
-
-        -- Smooth rainbow cycle
-        Hue = Hue + (1 / 300)
-
-        if Hue >= 1 then
-            Hue = 0
-        end
-
-        local RainbowColor = Color3.fromHSV(Hue, 1, 1)
-
-        Library.CurrentRainbowHue = Hue
-        Library.CurrentRainbowColor = RainbowColor
-
-        -- Update the main accent color so every UI element that uses
-        -- AccentColor (including sliders, toggles, tabs, buttons, etc.)
-        -- follows the rainbow.
-        Library.AccentColor = RainbowColor
-        Library.AccentColorDark = Library:GetDarkerColor(RainbowColor)
-        Library.RainbowOutlineColor = RainbowColor
-
-        -- Refresh all registered UI colors.
-        Library:UpdateColorsUsingRegistry()
-    end
-end))
+Library.AccentColor = PastelPink;
+Library.AccentColorDark = PastelPinkDark;
+Library.RainbowOutlineColor = PastelPink;
+Library.CurrentRainbowHue = 0;
+Library.CurrentRainbowColor = PastelPink;
 
 local function GetPlayersString()
     local PlayerList = Players:GetPlayers();
@@ -3557,7 +3536,7 @@ function Library:CreateWindow(...)
                     local mPos = InputService:GetMouseLocation();
 
                     -- Rainbow cursor: smoothly cycles through the entire color spectrum.
-                    Cursor.Color = Library.CurrentRainbowColor or Library.RainbowOutlineColor;
+                    Cursor.Color = PastelPink;
 
                     Cursor.PointA = Vector2.new(mPos.X, mPos.Y);
                     Cursor.PointB = Vector2.new(mPos.X + 16, mPos.Y + 6);
